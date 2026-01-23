@@ -11,7 +11,7 @@ import { SESSION_EXPIRY } from "#constants/auth-constants.js";
 export async function isAuthenticated(
   req: UserRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const sid = req.cookies?.sid;
@@ -19,7 +19,7 @@ export async function isAuthenticated(
     const authorization = req.headers.authorization;
     const token = authorization?.split(" ")[1];
 
-    if (!sid || !token) {
+    if (!sid && !token) {
       return ApiResponse.Unauthorized(res, "Unauthorized, Please login first.");
     }
 
@@ -67,7 +67,7 @@ export async function isAuthenticated(
             lastUsedAt: new Date(),
             expiresAt: new Date(Date.now() + SESSION_EXPIRY),
           },
-        }
+        },
       );
     }
 
